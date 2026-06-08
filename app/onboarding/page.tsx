@@ -6,7 +6,7 @@ export default function OnboardingPage({
   searchParams: { message: string }
 }) {
   return (
-    <div className="flex-1 flex flex-col w-full min-h-screen relative overflow-hidden bg-slate-950 text-white justify-center items-center py-12">
+    <div className="flex-1 flex flex-col w-full min-h-[calc(100vh-5rem)] relative overflow-hidden bg-slate-950 text-white justify-center items-center py-12">
       {/* Premium glowing background elements */}
       <div className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="fixed bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[120px] pointer-events-none"></div>
@@ -19,41 +19,41 @@ export default function OnboardingPage({
           <form className="flex flex-col w-full gap-6 text-slate-200">
           
           <div>
-            <label className="text-sm font-bold text-slate-400 block mb-1">Pseudonym (Public)</label>
-            <input className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 placeholder-slate-500" name="pseudonym" placeholder="e.g. TechBro in Tokyo" required />
+            <label className="text-sm font-bold text-slate-400 block mb-2">Pseudonym (Public)</label>
+            <input className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="pseudonym" placeholder="e.g. TechBro in Tokyo" required />
           </div>
 
           <div>
-            <label className="text-sm font-bold text-slate-400 block mb-1">Real Name (Private until revealed)</label>
-            <input className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 placeholder-slate-500" name="real_name" placeholder="John Doe" required />
+            <label className="text-sm font-bold text-slate-400 block mb-2">Real Name (Private until revealed)</label>
+            <input className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="real_name" placeholder="John Doe" required />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-bold text-slate-400 block mb-1">Home City / Region</label>
-              <input className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 placeholder-slate-500" name="home_city" placeholder="e.g. Mumbai" required />
+              <label className="text-sm font-bold text-slate-400 block mb-2">Home City / Region</label>
+              <input className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="home_city" placeholder="e.g. Mumbai" required />
             </div>
             <div>
-              <label className="text-sm font-bold text-slate-400 block mb-1">Home Pincode</label>
-              <input className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 placeholder-slate-500" name="home_pincode" placeholder="e.g. 400001" required />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-bold text-slate-400 block mb-1">Current City, University, or Company</label>
-              <input className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 placeholder-slate-500" name="current_city" placeholder="e.g. London, Oxford Uni..." required />
-            </div>
-            <div>
-              <label className="text-sm font-bold text-slate-400 block mb-1">Current Pincode</label>
-              <input className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 placeholder-slate-500" name="current_pincode" placeholder="e.g. SW1A 1AA" required />
+              <label className="text-sm font-bold text-slate-400 block mb-2">Home Pincode</label>
+              <input className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="home_pincode" placeholder="e.g. 400001" required />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-bold text-slate-400 block mb-1">Gender</label>
-              <select className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 text-slate-200" name="gender" required defaultValue="">
+              <label className="text-sm font-bold text-slate-400 block mb-2">Current City, University, or Company</label>
+              <input className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="current_city" placeholder="e.g. London, Oxford Uni..." required />
+            </div>
+            <div>
+              <label className="text-sm font-bold text-slate-400 block mb-2">Current Pincode</label>
+              <input className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="current_pincode" placeholder="e.g. SW1A 1AA" required />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-bold text-slate-400 block mb-2">Gender</label>
+              <select className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 text-slate-200 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="gender" required defaultValue="">
                 <option value="" disabled>Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -63,14 +63,14 @@ export default function OnboardingPage({
               </select>
             </div>
             <div>
-              <label className="text-sm font-bold text-slate-400 block mb-1">Primary Language</label>
-              <input className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 placeholder-slate-500" name="language" placeholder="e.g. Telugu" required />
+              <label className="text-sm font-bold text-slate-400 block mb-2">Primary Language</label>
+              <input className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="language" placeholder="e.g. Telugu" required />
             </div>
           </div>
 
           <div>
-            <label className="text-sm font-bold text-slate-400 block mb-1">Status</label>
-            <select className="w-full rounded-lg px-4 py-3 bg-slate-800 border border-slate-700 text-slate-200" name="status" required defaultValue="Student">
+            <label className="text-sm font-bold text-slate-400 block mb-2">Status</label>
+            <select className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 text-slate-200 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all" name="status" required defaultValue="Student">
               <option value="Student">Student</option>
               <option value="Professional">Professional</option>
             </select>
@@ -78,15 +78,16 @@ export default function OnboardingPage({
 
           <button
             formAction={createProfile}
-            className="mt-4 bg-blue-600 rounded-lg px-4 py-3 text-white font-bold hover:bg-blue-700 transition-colors"
+            className="mt-4 w-full bg-cyan-600 hover:bg-cyan-500 rounded-xl px-4 py-4 text-white font-bold transition-all shadow-lg hover:shadow-cyan-500/25"
           >
-            Join the Directory
+            Join the Network
           </button>
           
           {searchParams?.message && (
-            <p className="mt-4 p-4 bg-slate-800 text-red-400 text-center rounded-lg border border-slate-700">
-              {searchParams.message}
-            </p>
+            <div className="mt-2 p-4 bg-red-500/10 border border-red-500/50 rounded-xl flex items-center gap-3">
+              <span className="text-red-400 text-xl">⚠</span>
+              <p className="text-red-400 font-medium text-sm">{searchParams.message}</p>
+            </div>
           )}
         </form>
       </div>

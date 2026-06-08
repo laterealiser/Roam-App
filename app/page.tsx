@@ -237,7 +237,7 @@ export default function Directory() {
 
       {/* Landing State */}
       {!hasSearched ? (
-        <div className="relative min-h-screen flex flex-col items-center justify-center p-6">
+        <div className="relative min-h-[calc(100vh-5rem)] flex flex-col items-center justify-center p-6">
           <Globe />
           
           <div className="relative z-10 w-full max-w-3xl text-center mb-12">
@@ -283,14 +283,6 @@ export default function Directory() {
                <button onClick={() => setHasSearched(false)} className="text-sm font-bold text-blue-400 hover:text-blue-300 bg-blue-900/20 px-4 py-2 rounded-lg border border-blue-900/50">
                  Change Location
                </button>
-               {sessionUser && (
-                 <button 
-                   onClick={async () => { await supabase.auth.signOut(); router.refresh(); setSessionUser(null); }} 
-                   className="text-sm font-bold text-slate-400 hover:text-red-400 transition-colors ml-2"
-                 >
-                   Sign Out
-                 </button>
-               )}
             </div>
           </header>
 

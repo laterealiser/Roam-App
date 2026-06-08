@@ -18,7 +18,18 @@ export async function login(formData: FormData) {
     redirect(`/login?message=${encodeURIComponent(error.message)}`)
   }
 
-  redirect('/onboarding')
+  // Check if the user already has a profile
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', (await supabase.auth.getUser()).data.user?.id)
+    .single()
+
+  if (profile) {
+    redirect('/network')
+  } else {
+    redirect('/onboarding')
+  }
 }
 
 export async function signup(formData: FormData) {

@@ -113,7 +113,7 @@ export default function ChatRoom() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-slate-950">
+    <div className="flex flex-col h-[calc(100vh-5rem)] bg-slate-950">
       {/* Sticky Header */}
       <header className="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-10 shadow-sm flex items-center justify-between">
         <div className="flex items-center gap-3">
