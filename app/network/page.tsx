@@ -32,7 +32,7 @@ export default async function NetworkPage() {
       p_home_city: profile.home_city,
       p_lat: profile.current_lat,
       p_lng: profile.current_lng,
-      p_radius_miles: 5 // 5 mile radius
+      p_radius_miles: 100 // 100 mile radius
     })
     
     if (!error && data) {
@@ -43,62 +43,70 @@ export default async function NetworkPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col w-full min-h-screen bg-slate-950 text-white p-6 pt-12 max-w-4xl mx-auto">
-      <div className="mb-10">
-        <h1 className="text-4xl font-bold mb-2">The Local Network</h1>
-        <p className="text-slate-400 text-lg">
-          You are currently in <span className="text-cyan-400 font-semibold">{profile.current_city}</span> holding the flag for <span className="text-blue-400 font-semibold">{profile.home_city}</span>.
-        </p>
-      </div>
+    <div className="flex-1 flex flex-col w-full min-h-screen bg-slate-950 text-white relative overflow-hidden">
+      {/* Premium glowing background elements */}
+      <div className="fixed top-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="fixed bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 mb-8 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-8 opacity-20">
-          <div className="w-32 h-32 bg-cyan-500 rounded-full blur-3xl"></div>
+      <div className="relative z-10 w-full p-6 pt-12 max-w-5xl mx-auto flex flex-col min-h-screen">
+        <div className="mb-10 text-center sm:text-left">
+          <h1 className="text-5xl font-extrabold mb-3 tracking-tight">The Local Network</h1>
+          <p className="text-slate-400 text-xl">
+            You are currently in <span className="text-cyan-400 font-bold">{profile.current_city}</span> holding the flag for <span className="text-blue-400 font-bold">{profile.home_city}</span>.
+          </p>
+        </div>
+
+        <div className="bg-slate-900/60 backdrop-blur-2xl border border-slate-800/50 rounded-3xl p-8 sm:p-12 mb-8 shadow-2xl relative overflow-hidden flex-1">
+          <div className="absolute top-0 right-0 p-8 opacity-30">
+            <div className="w-48 h-48 bg-cyan-500 rounded-full blur-[100px]"></div>
+          </div>
+          
+          <h2 className="text-3xl font-bold mb-6 flex items-center gap-3 relative z-10">
+            <span className="text-4xl">📍</span> Hyper-Local Matches
+          </h2>
+          
+          <div className="relative z-10">
+            {(!profile.current_lat) ? (
+              <p className="text-slate-400 text-lg">We don't have your exact coordinates yet. Please update your profile to enable radius matching.</p>
+            ) : nearbyMatches.length === 0 ? (
+              <div className="py-12 text-center sm:text-left">
+                <p className="text-2xl text-slate-200 font-bold mb-3">You're the first pioneer here!</p>
+                <p className="text-slate-400 text-lg">There is no one else from {profile.home_city} within a 100-mile radius of you yet. We'll notify you when someone arrives.</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-slate-300 font-medium mb-8 text-xl">
+                  There {nearbyMatches.length === 1 ? 'is' : 'are'} <span className="text-cyan-400 font-black text-2xl px-1">{nearbyMatches.length}</span> {nearbyMatches.length === 1 ? 'person' : 'people'} from {profile.home_city} within 100 miles of you!
+                </p>
+                
+                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  {nearbyMatches.map((match) => (
+                    <div key={match.id} className="bg-slate-950/50 border border-slate-800/80 rounded-2xl p-6 hover:border-slate-500 hover:shadow-[0_0_20px_rgba(34,211,238,0.1)] transition-all duration-300 group">
+                      <div className="flex justify-between items-start mb-6">
+                        <div>
+                          <h3 className="font-extrabold text-xl mb-1 text-white group-hover:text-cyan-400 transition-colors">{match.pseudonym}</h3>
+                          <p className="text-sm text-slate-400 font-medium">{match.status} • {Math.round(match.distance * 10) / 10} miles away</p>
+                        </div>
+                        <div className="bg-blue-500/10 border border-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                          {match.home_city}
+                        </div>
+                      </div>
+                      <button className="w-full bg-slate-800 hover:bg-cyan-600 hover:text-white text-slate-300 rounded-xl py-3 text-sm font-bold transition-all duration-300">
+                        Send Message
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         
-        <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
-          <span className="text-3xl">📍</span> Hyper-Local Matches
-        </h2>
-        
-        {(!profile.current_lat) ? (
-          <p className="text-slate-400">We don't have your exact coordinates yet. Please update your profile to enable radius matching.</p>
-        ) : nearbyMatches.length === 0 ? (
-          <div className="py-8">
-            <p className="text-xl text-slate-300 font-medium mb-2">You're the first pioneer here!</p>
-            <p className="text-slate-400">There is no one else from {profile.home_city} within a 5-mile radius of you yet. We'll notify you when someone arrives.</p>
-          </div>
-        ) : (
-          <div>
-            <p className="text-slate-300 font-medium mb-6 text-lg">
-              There {nearbyMatches.length === 1 ? 'is' : 'are'} <span className="text-cyan-400 font-bold text-xl">{nearbyMatches.length}</span> {nearbyMatches.length === 1 ? 'person' : 'people'} from {profile.home_city} within 5 miles of you!
-            </p>
-            
-            <div className="grid gap-4 md:grid-cols-2">
-              {nearbyMatches.map((match) => (
-                <div key={match.id} className="bg-slate-800/50 border border-slate-700 rounded-xl p-5 hover:border-slate-500 transition-colors">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="font-bold text-lg">{match.pseudonym}</h3>
-                      <p className="text-sm text-slate-400">{match.status} • {Math.round(match.distance * 10) / 10} miles away</p>
-                    </div>
-                    <div className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-xs font-bold">
-                      {match.home_city}
-                    </div>
-                  </div>
-                  <button className="w-full bg-slate-700 hover:bg-slate-600 text-white rounded-lg py-2 text-sm font-bold transition-colors">
-                    Send Message
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-      
-      <div className="mt-auto py-8">
-        <Link href="/" className="text-slate-500 hover:text-slate-300 transition-colors">
-          ← Back to Globe
-        </Link>
+        <div className="mt-auto py-8">
+          <Link href="/" className="text-slate-500 hover:text-slate-300 font-medium transition-colors inline-flex items-center gap-2">
+            <span>←</span> Back to Globe
+          </Link>
+        </div>
       </div>
     </div>
   )

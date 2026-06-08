@@ -6,12 +6,17 @@ export default function OnboardingPage({
   searchParams: { message: string }
 }) {
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-xl justify-center gap-2 min-h-screen mx-auto">
-      <div className="bg-slate-900 rounded-2xl p-8 shadow-2xl border border-slate-800 my-8">
-        <h1 className="text-3xl text-white font-bold mb-2">Complete your profile</h1>
-        <p className="text-slate-400 mb-8">Tell us a bit about yourself. Don't worry, you'll be completely anonymous until you choose to reveal yourself.</p>
-        
-        <form className="flex flex-col w-full gap-5 text-slate-200">
+    <div className="flex-1 flex flex-col w-full min-h-screen relative overflow-hidden bg-slate-950 text-white justify-center items-center py-12">
+      {/* Premium glowing background elements */}
+      <div className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="fixed bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[120px] pointer-events-none"></div>
+      
+      <div className="relative z-10 w-full px-6 sm:max-w-2xl mx-auto">
+        <div className="bg-slate-900/60 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-800/50">
+          <h1 className="text-4xl text-white font-extrabold mb-3 tracking-tight">Complete your profile</h1>
+          <p className="text-slate-400 mb-10 text-lg">Tell us a bit about yourself. Don't worry, you'll be completely anonymous until you choose to reveal yourself.</p>
+          
+          <form className="flex flex-col w-full gap-6 text-slate-200">
           
           <div>
             <label className="text-sm font-bold text-slate-400 block mb-1">Pseudonym (Public)</label>
