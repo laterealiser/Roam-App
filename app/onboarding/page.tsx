@@ -90,6 +90,7 @@ export default function OnboardingPage({
           )}
         </form>
       </div>
+      </div>
     </div>
   )
 }
