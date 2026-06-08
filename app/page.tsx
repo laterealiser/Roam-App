@@ -192,7 +192,7 @@ export default function Directory() {
               ✕
             </button>
             <h2 className="text-2xl font-bold text-white mb-2">
-              {authMode === 'login' ? 'Sign in to chat' : 'Join Haven to chat'}
+              {authMode === 'login' ? 'Sign in to chat' : 'Join Roam to chat'}
             </h2>
             <p className="text-slate-400 text-sm mb-6">
               You need an account to connect with others anonymously.

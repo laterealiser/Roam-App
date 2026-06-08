@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Haven | Find Your People",
+  title: "Roam | Find Your People",
   description: "Connect anonymously with people from your home city.",
 };
 

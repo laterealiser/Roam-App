@@ -8,7 +8,7 @@ export default function LoginPage({
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 min-h-screen mx-auto">
       <div className="bg-slate-900 rounded-2xl p-8 shadow-2xl border border-slate-800">
-        <h1 className="text-3xl text-white font-bold mb-2">Welcome to Haven</h1>
+        <h1 className="text-3xl text-white font-bold mb-2">Welcome to Roam</h1>
         <p className="text-slate-400 mb-8">Sign in with your email and password to find your people.</p>
         
         <form className="flex flex-col w-full justify-center gap-4 text-slate-200">
