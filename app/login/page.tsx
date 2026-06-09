@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from 'react'
 import { login, signup } from './actions'
 
 export default function LoginPage({
@@ -5,8 +8,10 @@ export default function LoginPage({
 }: {
   searchParams: { message: string }
 }) {
+  const [showPassword, setShowPassword] = useState(false)
+
   return (
-    <div className="flex-1 flex flex-col w-full min-h-screen relative overflow-hidden bg-slate-950 text-white justify-center items-center py-12">
+    <div className="flex-1 flex flex-col w-full min-h-[calc(100vh-5rem)] relative overflow-hidden bg-slate-950 text-white justify-center items-center py-12">
       {/* Premium glowing background elements */}
       <div className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="fixed bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[120px] pointer-events-none"></div>
@@ -27,23 +32,41 @@ export default function LoginPage({
               <input
                 className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all"
                 name="email"
+                id="email"
+                type="email"
                 placeholder="you@example.com"
                 required
               />
             </div>
             
             <div>
-              <label className="text-sm font-bold text-slate-400 block mb-2" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="w-full rounded-xl px-4 py-3 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all"
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-sm font-bold text-slate-400" htmlFor="password">
+                  Password
+                </label>
+                <a href="/forgot-password" className="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
+                  Forgot password?
+                </a>
+              </div>
+              <div className="relative">
+                <input
+                  className="w-full rounded-xl px-4 py-3 pr-12 bg-slate-950/50 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors text-sm font-bold w-8 h-8 flex items-center justify-center"
+                  tabIndex={-1}
+                >
+                  {showPassword ? '🙈' : '👁'}
+                </button>
+              </div>
             </div>
             
             <button
@@ -52,6 +75,15 @@ export default function LoginPage({
             >
               Sign In
             </button>
+
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-700"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-slate-900/60 px-4 text-slate-500 font-medium">or</span>
+              </div>
+            </div>
 
             <button
               formAction={signup}
