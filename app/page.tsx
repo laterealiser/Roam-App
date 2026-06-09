@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import createGlobe from "cobe"
 
-// Properly sized and smoothly rotating 3D globe
+// Vivid rotating 3D globe with network markers
 function Globe() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -14,49 +14,63 @@ function Globe() {
   const initGlobe = useCallback(() => {
     if (!canvasRef.current || !containerRef.current) return
     
-    // Destroy previous instance if any
     if (globeRef.current) globeRef.current.destroy()
 
-    // Use the smaller of container width/height to keep it square
     const containerWidth = containerRef.current.offsetWidth
     const containerHeight = containerRef.current.offsetHeight
     const size = Math.min(containerWidth, containerHeight, 600)
     
-    // Set canvas element size explicitly
     canvasRef.current.style.width = `${size}px`
     canvasRef.current.style.height = `${size}px`
+    
+    // Marker locations — major world cities
+    const markers = [
+      { location: [37.7595, -122.4367], size: 0.06 },  // San Francisco
+      { location: [40.7128, -74.0060], size: 0.07 },   // New York
+      { location: [51.5072, -0.1276], size: 0.07 },    // London
+      { location: [35.6762, 139.6503], size: 0.06 },   // Tokyo
+      { location: [19.0760, 72.8777], size: 0.07 },    // Mumbai
+      { location: [1.3521, 103.8198], size: 0.05 },    // Singapore
+      { location: [-33.8688, 151.2093], size: 0.05 },  // Sydney
+      { location: [-23.5505, -46.6333], size: 0.06 },  // São Paulo
+      { location: [25.2048, 55.2708], size: 0.06 },    // Dubai
+      { location: [48.8566, 2.3522], size: 0.06 },     // Paris
+      { location: [28.6139, 77.2090], size: 0.06 },    // Delhi
+      { location: [55.7558, 37.6173], size: 0.05 },    // Moscow
+      { location: [13.7563, 100.5018], size: 0.05 },   // Bangkok
+      { location: [52.5200, 13.4050], size: 0.05 },    // Berlin
+      { location: [39.9042, 116.4074], size: 0.06 },   // Beijing
+      { location: [-1.2921, 36.8219], size: 0.04 },    // Nairobi
+      { location: [43.6532, -79.3832], size: 0.05 },   // Toronto
+    ]
+
+    let frameCount = 0
     
     globeRef.current = createGlobe(canvasRef.current, {
       devicePixelRatio: Math.min(window.devicePixelRatio, 2),
       width: size * 2,
       height: size * 2,
       phi: 0,
-      theta: 0.25,
+      theta: 0.3,
       dark: 1,
-      diffuse: 1.2,
-      mapSamples: 16000,
-      mapBrightness: 6,
-      baseColor: [0.1, 0.1, 0.15], 
-      markerColor: [0.2, 1, 0.8],
-      glowColor: [0.1, 0.2, 0.4], 
-      markers: [
-        { location: [37.7595, -122.4367], size: 0.03 },
-        { location: [40.7128, -74.0060], size: 0.03 },
-        { location: [51.5072, -0.1276], size: 0.03 },
-        { location: [35.6762, 139.6503], size: 0.04 },
-        { location: [19.0760, 72.8777], size: 0.03 },
-        { location: [1.3521, 103.8198], size: 0.03 },
-        { location: [-33.8688, 151.2093], size: 0.03 },
-        { location: [-23.5505, -46.6333], size: 0.03 },
-        { location: [25.2048, 55.2708], size: 0.03 },
-        { location: [48.8566, 2.3522], size: 0.03 },
-        { location: [28.6139, 77.2090], size: 0.03 },
-        { location: [6.5244, 3.3792], size: 0.03 },
-      ],
+      diffuse: 3,
+      mapSamples: 24000,
+      mapBrightness: 8,
+      baseColor: [0.15, 0.2, 0.35],
+      markerColor: [0.1, 0.9, 0.7],
+      glowColor: [0.05, 0.15, 0.35],
+      markers: markers,
       // @ts-expect-error - cobe types
       onRender: (state: any) => {
         state.phi = phiRef.current
-        phiRef.current += 0.004
+        phiRef.current += 0.003
+        frameCount++
+        
+        // Animate marker sizes to create a pulsing network effect
+        state.markers = markers.map((m, i) => ({
+          ...m,
+          size: m.size + Math.sin(frameCount * 0.03 + i * 1.5) * 0.02
+        }))
       },
     })
   }, [])
@@ -72,8 +86,11 @@ function Globe() {
   }, [initGlobe])
 
   return (
-    <div ref={containerRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-50">
-      <canvas ref={canvasRef} />
+    <div ref={containerRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+      {/* Pulse rings behind the globe */}
+      <div className="absolute w-[320px] h-[320px] sm:w-[450px] sm:h-[450px] md:w-[550px] md:h-[550px] rounded-full border border-cyan-500/10 animate-ping" style={{ animationDuration: '4s' }} />
+      <div className="absolute w-[350px] h-[350px] sm:w-[480px] sm:h-[480px] md:w-[580px] md:h-[580px] rounded-full border border-blue-500/5 animate-ping" style={{ animationDuration: '6s' }} />
+      <canvas ref={canvasRef} className="opacity-80" />
     </div>
   )
 }
