@@ -16,12 +16,7 @@ function Globe() {
         filter: "invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.2)"
       }}
     >
-      {/* Networking People Animations */}
-      <div className="absolute top-[20%] left-[30%] w-2 h-2 sm:w-3 sm:h-3 bg-cyan-400 rounded-full shadow-[0_0_10px_#22d3ee] animate-ping" style={{ animationDuration: '2.5s' }} />
-      <div className="absolute top-[60%] left-[70%] w-2 h-2 sm:w-3 sm:h-3 bg-blue-400 rounded-full shadow-[0_0_10px_#60a5fa] animate-ping" style={{ animationDuration: '3.5s', animationDelay: '1s' }} />
-      <div className="absolute top-[40%] left-[50%] w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-400 rounded-full shadow-[0_0_10px_#c084fc] animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }} />
-      <div className="absolute top-[75%] left-[40%] w-1.5 h-1.5 sm:w-2 sm:h-2 bg-cyan-300 rounded-full shadow-[0_0_10px_#67e8f9] animate-ping" style={{ animationDuration: '4s', animationDelay: '2s' }} />
-      
+
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes spin-globe {
           from { background-position: 0 0; }
@@ -161,15 +156,15 @@ export default function HomePage() {
             <div className="absolute bottom-[-10%] right-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
             <div className="relative z-10 w-full md:w-1/2 max-w-2xl text-center md:text-left mb-0 sm:mb-8 order-1 pt-6 md:pt-0">
-              <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-3 sm:mb-6">
+              <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-4 sm:mb-8">
                 <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
                 Connecting people across 50+ cities
               </div>
 
-              <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-2 sm:mb-4 text-white leading-[1.1]">
+              <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-4 sm:mb-6 text-white leading-[1.1]">
                 Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">network</span>
               </h1>
-              <p className="text-xs sm:text-base text-slate-400 mb-3 sm:mb-10 md:max-w-xl mx-auto md:mx-0 px-2 md:px-0">
+              <p className="text-xs sm:text-base text-slate-400 mb-6 sm:mb-12 md:max-w-xl mx-auto md:mx-0 px-2 md:px-0">
                 Moved to a new city? Search for your university, workplace, or area and discover people from your hometown living nearby.
               </p>
               
@@ -193,8 +188,8 @@ export default function HomePage() {
           </section>
 
           {/* COMPACT FEATURES — hidden on mobile to keep it tight */}
-          <section className="relative z-10 px-4 sm:px-6 pb-2 sm:pb-16 mt-4 sm:mt-0 max-w-5xl md:mx-0">
-            <div className="max-w-5xl mx-auto grid grid-cols-3 gap-2 sm:gap-6">
+          <section className="relative z-10 px-4 sm:px-6 pb-2 sm:pb-16 mt-8 sm:mt-0 max-w-5xl md:mx-0">
+            <div className="max-w-5xl mx-auto grid grid-cols-3 gap-3 sm:gap-6">
               {[
                 { icon: "📍", title: "Hyper-Local", desc: "100-mile radius matching from your pincode" },
                 { icon: "🎭", title: "Anonymous", desc: "Chat with a pseudonym, reveal when ready" },
