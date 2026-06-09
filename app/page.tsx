@@ -205,21 +205,21 @@ export default function HomePage() {
         <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between overflow-y-auto">
 
           {/* HERO */}
-          <section className="relative flex-1 flex flex-col items-center justify-start sm:justify-center pt-8 sm:pt-0 px-4 sm:px-6">
+          <section className="relative flex-1 flex flex-col items-center justify-start sm:justify-center pt-2 sm:pt-0 px-4 sm:px-6">
             <Globe />
             <div className="absolute top-[-10%] left-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-            <div className="relative z-10 w-full max-w-3xl text-center mb-2 sm:mb-8">
-              <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-5 sm:mb-6">
+            <div className="relative z-10 w-full max-w-3xl text-center mb-0 sm:mb-8">
+              <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-3 sm:mb-6">
                 <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
                 Connecting people across 50+ cities
               </div>
 
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-3 sm:mb-4 text-white leading-[1.1]">
+              <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-2 sm:mb-4 text-white leading-[1.1]">
                 Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">network</span>
               </h1>
-              <p className="text-sm sm:text-base text-slate-400 mb-4 sm:mb-10 max-w-xl mx-auto px-2">
+              <p className="text-xs sm:text-base text-slate-400 mb-3 sm:mb-10 max-w-xl mx-auto px-2">
                 Moved to a new city? Search for your university, workplace, or area and discover people from your hometown living nearby.
               </p>
               
@@ -227,14 +227,14 @@ export default function HomePage() {
                 <input 
                   value={currentCitySearch}
                   onChange={(e) => setCurrentCitySearch(e.target.value)}
-                  className="flex-1 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-4 sm:py-5 text-base sm:text-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white placeholder-slate-400 shadow-2xl transition-all" 
+                  className="flex-1 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-5 text-sm sm:text-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white placeholder-slate-400 shadow-2xl transition-all" 
                   placeholder="University, Area, or Pincode" 
                   autoFocus
                 />
                 <button 
                   type="submit"
                   disabled={!currentCitySearch.trim()}
-                  className="bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-500 hover:bg-cyan-500 text-white font-bold py-4 sm:py-5 px-8 sm:px-10 rounded-xl sm:rounded-2xl transition-colors shadow-lg text-base"
+                  className="bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-500 hover:bg-cyan-500 text-white font-bold py-3 sm:py-5 px-6 sm:px-10 rounded-xl sm:rounded-2xl transition-colors shadow-lg text-sm sm:text-base"
                 >
                   Search
                 </button>
@@ -243,15 +243,15 @@ export default function HomePage() {
           </section>
 
           {/* COMPACT FEATURES — hidden on mobile to keep it tight */}
-          <section className="relative z-10 px-4 sm:px-6 pb-4 sm:pb-16">
-            <div className="max-w-5xl mx-auto grid grid-cols-3 gap-3 sm:gap-6">
+          <section className="relative z-10 px-4 sm:px-6 pb-2 sm:pb-16 mt-4 sm:mt-0">
+            <div className="max-w-5xl mx-auto grid grid-cols-3 gap-2 sm:gap-6">
               {[
                 { icon: "📍", title: "Hyper-Local", desc: "100-mile radius matching from your pincode" },
                 { icon: "🎭", title: "Anonymous", desc: "Chat with a pseudonym, reveal when ready" },
                 { icon: "🔒", title: "Private", desc: "Messages auto-delete after 24 hours" },
               ].map((f, i) => (
-                <div key={i} className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/50 rounded-xl sm:rounded-2xl p-3 sm:p-6 text-center hover:border-cyan-500/30 transition-all duration-300">
-                  <span className="text-xl sm:text-3xl mb-1 sm:mb-3 block">{f.icon}</span>
+                <div key={i} className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/50 rounded-xl sm:rounded-2xl p-2 sm:p-6 text-center hover:border-cyan-500/30 transition-all duration-300">
+                  <span className="text-lg sm:text-3xl mb-0.5 sm:mb-3 block">{f.icon}</span>
                   <h3 className="text-xs sm:text-sm font-bold text-white mb-0.5 sm:mb-1">{f.title}</h3>
                   <p className="text-slate-400 text-[10px] sm:text-xs leading-relaxed hidden sm:block">{f.desc}</p>
                 </div>
