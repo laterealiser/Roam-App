@@ -55,7 +55,7 @@ export default function Navbar() {
           {!user ? (
             <>
               <Link href="/login" className="text-slate-300 font-bold hover:text-white transition-colors">Sign In</Link>
-              <Link href="/login" className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 px-6 rounded-full transition-all shadow-lg hover:shadow-cyan-500/25">Sign Up</Link>
+              <Link href="/signup" className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 px-6 rounded-full transition-all shadow-lg hover:shadow-cyan-500/25">Sign Up</Link>
             </>
           ) : (
             <>
@@ -85,7 +85,7 @@ export default function Navbar() {
           {!user ? (
             <div className="flex flex-col gap-3">
               <Link href="/login" className={mobileNavLinkClass('/login')}>Sign In</Link>
-              <Link href="/login" className="text-center bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-xl transition-all">Sign Up</Link>
+              <Link href="/signup" className="text-center bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-xl transition-all">Sign Up</Link>
             </div>
           ) : (
             <div className="flex flex-col">
