@@ -290,8 +290,8 @@ export default function HomePage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-                  {users.map(user => (
-                    <div key={user.id} className="group bg-slate-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-800 hover:border-slate-700 transition-all hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between">
+                  {users.map((user, i) => (
+                    <div key={user.id} className="animate-page-in group bg-slate-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-800 hover:border-slate-700 transition-all hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between" style={{ opacity: 0, animationDelay: `${i * 50}ms` }}>
                       <div>
                         <div className="flex justify-between items-start mb-3 sm:mb-4">
                           <h2 className="text-base sm:text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">{user.pseudonym}</h2>
