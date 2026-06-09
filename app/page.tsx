@@ -53,12 +53,12 @@ function Globe() {
       phi: 0,
       theta: 0.3,
       dark: 1,
-      diffuse: 3,
-      mapSamples: 24000,
-      mapBrightness: 8,
-      baseColor: [0.15, 0.2, 0.35],
+      diffuse: 2,
+      mapSamples: 30000,
+      mapBrightness: 12, // extremely bright continents
+      baseColor: [0.1, 0.2, 0.35], // blue water
       markerColor: [0.1, 0.9, 0.7],
-      glowColor: [0.05, 0.15, 0.35],
+      glowColor: [0.1, 0.2, 0.4],
       markers: markers,
       // @ts-expect-error - cobe types
       onRender: (state: any) => {
@@ -202,10 +202,10 @@ export default function HomePage() {
 
       {/* ═══ LANDING STATE ═══ */}
       {!hasSearched ? (
-        <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between">
+        <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between overflow-y-auto">
 
           {/* HERO */}
-          <section className="relative flex-1 flex flex-col items-center justify-center sm:justify-center pt-10 sm:pt-0 px-4 sm:px-6">
+          <section className="relative flex-1 flex flex-col items-center justify-start sm:justify-center pt-8 sm:pt-0 px-4 sm:px-6">
             <Globe />
             <div className="absolute top-[-10%] left-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>

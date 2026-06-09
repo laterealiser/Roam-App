@@ -26,6 +26,6 @@ export async function signup(formData: FormData) {
   if (data.session) {
     redirect('/onboarding')
   } else {
-    redirect('/signup?message=Account created! Check your email to confirm, or disable email confirmations in Supabase.')
+    redirect('/login?message=Account created! Check your email to confirm, or disable email confirmations in Supabase.')
   }
 }
