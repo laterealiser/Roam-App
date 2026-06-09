@@ -4,85 +4,26 @@ import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import createGlobe from "cobe"
 
-// Vivid rotating 3D globe with network markers
+// Pure CSS 3D Globe with World Map Texture
 function Globe() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const phiRef = useRef(0)
-  const globeRef = useRef<any>(null)
-
-  const initGlobe = useCallback(() => {
-    if (!canvasRef.current || !containerRef.current) return
-    
-    if (globeRef.current) globeRef.current.destroy()
-
-    const containerWidth = containerRef.current.offsetWidth
-    const containerHeight = containerRef.current.offsetHeight
-    const size = Math.min(containerWidth, containerHeight, 600)
-    
-    canvasRef.current.style.width = `${size}px`
-    canvasRef.current.style.height = `${size}px`
-    
-    // Marker locations — major world cities
-    const markers: { location: [number, number], size: number }[] = [
-      { location: [37.7595, -122.4367], size: 0.06 },  // San Francisco
-      { location: [40.7128, -74.0060], size: 0.07 },   // New York
-      { location: [51.5072, -0.1276], size: 0.07 },    // London
-      { location: [35.6762, 139.6503], size: 0.06 },   // Tokyo
-      { location: [19.0760, 72.8777], size: 0.07 },    // Mumbai
-      { location: [1.3521, 103.8198], size: 0.05 },    // Singapore
-      { location: [-33.8688, 151.2093], size: 0.05 },  // Sydney
-      { location: [-23.5505, -46.6333], size: 0.06 },  // São Paulo
-      { location: [25.2048, 55.2708], size: 0.06 },    // Dubai
-      { location: [48.8566, 2.3522], size: 0.06 },     // Paris
-      { location: [28.6139, 77.2090], size: 0.06 },    // Delhi
-      { location: [55.7558, 37.6173], size: 0.05 },    // Moscow
-      { location: [13.7563, 100.5018], size: 0.05 },   // Bangkok
-      { location: [52.5200, 13.4050], size: 0.05 },    // Berlin
-      { location: [39.9042, 116.4074], size: 0.06 },   // Beijing
-      { location: [-1.2921, 36.8219], size: 0.04 },    // Nairobi
-      { location: [43.6532, -79.3832], size: 0.05 },   // Toronto
-    ]
-
-    let frameCount = 0
-    
-    globeRef.current = createGlobe(canvasRef.current, {
-      devicePixelRatio: Math.min(window.devicePixelRatio, 2),
-      width: size * 2,
-      height: size * 2,
-      phi: 0,
-      theta: 0.3,
-      dark: 1,
-      diffuse: 2,
-      mapSamples: 30000,
-      mapBrightness: 12, // extremely bright continents
-      baseColor: [0.1, 0.2, 0.35], // blue water
-      markerColor: [0.1, 0.9, 0.7],
-      glowColor: [0.1, 0.2, 0.4],
-      markers: markers,
-      // @ts-expect-error - cobe types
-      onRender: (state: any) => {
-        state.phi = phiRef.current
-        phiRef.current += 0.003
-        frameCount++
-
-      },
-    })
-  }, [])
-
-  useEffect(() => {
-    initGlobe()
-    const handleResize = () => { initGlobe() }
-    window.addEventListener('resize', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      if (globeRef.current) globeRef.current.destroy()
-    }
-  }, [initGlobe])
-
   return (
-    <div ref={containerRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-      <canvas ref={canvasRef} className="opacity-80" />
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+      <div 
+        className="w-[280px] h-[280px] sm:w-[450px] sm:h-[450px] rounded-full opacity-40 sm:opacity-60"
+        style={{
+          background: "url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg') repeat-x center",
+          backgroundSize: "auto 100%",
+          animation: "spin-globe 30s linear infinite",
+          boxShadow: "inset -20px -20px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(6, 182, 212, 0.4), 0 0 30px rgba(6, 182, 212, 0.1)",
+          filter: "invert(1) hue-rotate(180deg) brightness(1.5) contrast(1.2)"
+        }}
+      />
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes spin-globe {
+          from { background-position: 0 0; }
+          to { background-position: 200% 0; }
+        }
+      `}} />
     </div>
   )
 }
@@ -202,10 +143,10 @@ export default function HomePage() {
 
       {/* ═══ LANDING STATE ═══ */}
       {!hasSearched ? (
-        <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between overflow-y-auto">
+        <div className="relative flex flex-col sm:min-h-[calc(100vh-5rem)] sm:justify-between overflow-y-auto overflow-x-hidden pt-6 sm:pt-0">
 
           {/* HERO */}
-          <section className="relative flex-1 flex flex-col items-center justify-start sm:justify-center pt-2 sm:pt-0 px-4 sm:px-6">
+          <section className="relative sm:flex-1 flex flex-col items-center justify-start sm:justify-center px-4 sm:px-6">
             <Globe />
             <div className="absolute top-[-10%] left-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
