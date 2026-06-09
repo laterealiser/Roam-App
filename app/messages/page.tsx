@@ -27,7 +27,7 @@ export default async function MessagesPage() {
     .order('updated_at', { ascending: false })
 
   // For each connection, fetch the OTHER user's profile
-  let conversations = []
+  let conversations: any[] = []
   if (connections && connections.length > 0) {
     const otherUserIds = connections.map(c => c.user_one_id === user.id ? c.user_two_id : c.user_one_id)
     
