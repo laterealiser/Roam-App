@@ -218,7 +218,7 @@ export default function HomePage() {
             <div className="absolute top-[-10%] left-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-            <div className="relative z-10 w-full max-w-3xl text-center mb-6 sm:mb-8">
+            <div className="relative z-10 w-full max-w-3xl text-center mb-2 sm:mb-8">
               <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-5 sm:mb-6">
                 <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
                 Connecting people across 50+ cities
@@ -227,7 +227,7 @@ export default function HomePage() {
               <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-3 sm:mb-4 text-white leading-[1.1]">
                 Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">network</span>
               </h1>
-              <p className="text-sm sm:text-base text-slate-400 mb-8 sm:mb-10 max-w-xl mx-auto px-2">
+              <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-10 max-w-xl mx-auto px-2">
                 Moved to a new city? Search for your university, workplace, or area and discover people from your hometown living nearby.
               </p>
               
@@ -251,7 +251,7 @@ export default function HomePage() {
           </section>
 
           {/* COMPACT FEATURES — hidden on mobile to keep it tight */}
-          <section className="relative z-10 px-4 sm:px-6 pb-8 sm:pb-16">
+          <section className="relative z-10 px-4 sm:px-6 pb-4 sm:pb-16">
             <div className="max-w-5xl mx-auto grid grid-cols-3 gap-3 sm:gap-6">
               {[
                 { icon: "📍", title: "Hyper-Local", desc: "100-mile radius matching from your pincode" },
