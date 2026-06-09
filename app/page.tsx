@@ -1,25 +1,37 @@
 "use client"
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import createGlobe from "cobe"
-import Link from 'next/link'
 
-// Sleek rotating 3D globe
+// Properly sized and smoothly rotating 3D globe
 function Globe() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const phiRef = useRef(0)
+  const globeRef = useRef<any>(null)
 
-  useEffect(() => {
-    if (!canvasRef.current) return
-    const width = canvasRef.current.offsetWidth
+  const initGlobe = useCallback(() => {
+    if (!canvasRef.current || !containerRef.current) return
     
-    const globe = createGlobe(canvasRef.current, {
-      devicePixelRatio: 2,
-      width: width * 2,
-      height: width * 2,
+    // Destroy previous instance if any
+    if (globeRef.current) globeRef.current.destroy()
+
+    // Use the smaller of container width/height to keep it square
+    const containerWidth = containerRef.current.offsetWidth
+    const containerHeight = containerRef.current.offsetHeight
+    const size = Math.min(containerWidth, containerHeight, 600)
+    
+    // Set canvas element size explicitly
+    canvasRef.current.style.width = `${size}px`
+    canvasRef.current.style.height = `${size}px`
+    
+    globeRef.current = createGlobe(canvasRef.current, {
+      devicePixelRatio: Math.min(window.devicePixelRatio, 2),
+      width: size * 2,
+      height: size * 2,
       phi: 0,
-      theta: 0,
+      theta: 0.25,
       dark: 1,
       diffuse: 1.2,
       mapSamples: 16000,
@@ -28,39 +40,40 @@ function Globe() {
       markerColor: [0.2, 1, 0.8],
       glowColor: [0.1, 0.2, 0.4], 
       markers: [
-        { location: [37.7595, -122.4367], size: 0.02 },
-        { location: [40.7128, -74.0060], size: 0.025 },
-        { location: [51.5072, -0.1276], size: 0.02 },
-        { location: [35.6762, 139.6503], size: 0.03 },
-        { location: [19.0760, 72.8777], size: 0.025 },
-        { location: [1.3521, 103.8198], size: 0.02 },
-        { location: [-33.8688, 151.2093], size: 0.02 },
-        { location: [-23.5505, -46.6333], size: 0.025 },
-        { location: [25.2048, 55.2708], size: 0.02 },
-        { location: [48.8566, 2.3522], size: 0.02 },
-        { location: [52.5200, 13.4050], size: 0.015 },
-        { location: [31.2304, 121.4737], size: 0.025 },
-        { location: [28.6139, 77.2090], size: 0.02 },
-        { location: [6.5244, 3.3792], size: 0.02 },
+        { location: [37.7595, -122.4367], size: 0.03 },
+        { location: [40.7128, -74.0060], size: 0.03 },
+        { location: [51.5072, -0.1276], size: 0.03 },
+        { location: [35.6762, 139.6503], size: 0.04 },
+        { location: [19.0760, 72.8777], size: 0.03 },
+        { location: [1.3521, 103.8198], size: 0.03 },
+        { location: [-33.8688, 151.2093], size: 0.03 },
+        { location: [-23.5505, -46.6333], size: 0.03 },
+        { location: [25.2048, 55.2708], size: 0.03 },
+        { location: [48.8566, 2.3522], size: 0.03 },
+        { location: [28.6139, 77.2090], size: 0.03 },
+        { location: [6.5244, 3.3792], size: 0.03 },
       ],
       // @ts-expect-error - cobe types
       onRender: (state: any) => {
         state.phi = phiRef.current
-        phiRef.current += 0.005
-        state.width = width * 2
-        state.height = width * 2
+        phiRef.current += 0.004
       },
     })
-    
-    return () => { globe.destroy() }
   }, [])
 
+  useEffect(() => {
+    initGlobe()
+    const handleResize = () => { initGlobe() }
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      if (globeRef.current) globeRef.current.destroy()
+    }
+  }, [initGlobe])
+
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-60 mix-blend-screen w-full h-full max-w-3xl mx-auto">
-      <canvas 
-        ref={canvasRef} 
-        style={{ width: '100%', height: '100%', aspectRatio: '1' }} 
-      />
+    <div ref={containerRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-50">
+      <canvas ref={canvasRef} />
     </div>
   )
 }
@@ -81,6 +94,9 @@ export default function HomePage() {
   const [authPassword, setAuthPassword] = useState('')
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login')
   const [authError, setAuthError] = useState('')
+  
+  // Mobile filter panel toggle
+  const [showFilters, setShowFilters] = useState(false)
 
   const router = useRouter()
   const supabase = createClient()
@@ -154,15 +170,15 @@ export default function HomePage() {
       {/* Auth Modal */}
       {showAuthModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
-            <button onClick={() => setShowAuthModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
-            <h2 className="text-2xl font-bold text-white mb-2">{authMode === 'login' ? 'Sign in to chat' : 'Join Roam to chat'}</h2>
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative mx-4">
+            <button onClick={() => setShowAuthModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">{authMode === 'login' ? 'Sign in to chat' : 'Join Roam to chat'}</h2>
             <p className="text-slate-400 text-sm mb-6">You need an account to connect with others anonymously.</p>
             <form onSubmit={handleAuthAction} className="flex flex-col gap-4">
-              <input className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" type="email" placeholder="Email address" value={authEmail} onChange={e => setAuthEmail(e.target.value)} required />
-              <input className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none" type="password" placeholder="Password" value={authPassword} onChange={e => setAuthPassword(e.target.value)} required minLength={6} />
+              <input className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none text-base" type="email" placeholder="Email address" value={authEmail} onChange={e => setAuthEmail(e.target.value)} required />
+              <input className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none text-base" type="password" placeholder="Password" value={authPassword} onChange={e => setAuthPassword(e.target.value)} required minLength={6} />
               {authError && <div className="text-red-400 text-sm p-3 bg-red-900/20 rounded-lg">{authError}</div>}
-              <button type="submit" className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-colors mt-2">{authMode === 'login' ? 'Sign In' : 'Create Account'}</button>
+              <button type="submit" className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-colors mt-2 text-base">{authMode === 'login' ? 'Sign In' : 'Create Account'}</button>
             </form>
             <div className="mt-6 text-center text-sm text-slate-400">
               {authMode === 'login' ? (
@@ -179,37 +195,37 @@ export default function HomePage() {
       {!hasSearched ? (
         <div className="relative min-h-[calc(100vh-5rem)] flex flex-col">
 
-          {/* HERO — Search front and center */}
-          <section className="relative flex-1 flex flex-col items-center justify-center px-6">
+          {/* HERO */}
+          <section className="relative flex-1 flex flex-col items-center justify-center px-4 sm:px-6">
             <Globe />
-            <div className="absolute top-[-10%] left-[-5%] w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-            <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute top-[-10%] left-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-            <div className="relative z-10 w-full max-w-3xl text-center mb-8">
-              <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs sm:text-sm font-bold px-4 py-2 rounded-full mb-6">
+            <div className="relative z-10 w-full max-w-3xl text-center mb-6 sm:mb-8">
+              <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-5 sm:mb-6">
                 <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
                 Connecting people across 50+ cities
               </div>
 
-              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4 text-white leading-[1.1]">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-3 sm:mb-4 text-white leading-[1.1]">
                 Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">network</span>
               </h1>
-              <p className="text-md text-slate-400 mb-10 max-w-xl mx-auto">
+              <p className="text-sm sm:text-base text-slate-400 mb-8 sm:mb-10 max-w-xl mx-auto px-2">
                 Moved to a new city? Search for your university, workplace, or area and discover people from your hometown living nearby.
               </p>
               
-              <form onSubmit={handleMainSearch} className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto relative z-20">
+              <form onSubmit={handleMainSearch} className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-2xl mx-auto relative z-20 px-2">
                 <input 
                   value={currentCitySearch}
                   onChange={(e) => setCurrentCitySearch(e.target.value)}
-                  className="flex-1 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-2xl px-6 py-5 text-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white placeholder-slate-400 shadow-2xl transition-all" 
-                  placeholder="University, Area, Office, or Pincode" 
+                  className="flex-1 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-4 sm:py-5 text-base sm:text-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white placeholder-slate-400 shadow-2xl transition-all" 
+                  placeholder="University, Area, or Pincode" 
                   autoFocus
                 />
                 <button 
                   type="submit"
                   disabled={!currentCitySearch.trim()}
-                  className="bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-500 hover:bg-cyan-500 text-white font-bold py-5 px-10 rounded-2xl transition-colors shadow-lg"
+                  className="bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-500 hover:bg-cyan-500 text-white font-bold py-4 sm:py-5 px-8 sm:px-10 rounded-xl sm:rounded-2xl transition-colors shadow-lg text-base"
                 >
                   Search
                 </button>
@@ -217,18 +233,18 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* COMPACT FEATURES — 3 cards in a single row */}
-          <section className="relative z-10 px-6 pb-16">
-            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* COMPACT FEATURES — hidden on mobile to keep it tight */}
+          <section className="relative z-10 px-4 sm:px-6 pb-8 sm:pb-16">
+            <div className="max-w-5xl mx-auto grid grid-cols-3 gap-3 sm:gap-6">
               {[
-                { icon: "📍", title: "Hyper-Local Matching", desc: "Find people from your hometown within 100 miles of your current pincode." },
-                { icon: "🎭", title: "Anonymous First", desc: "Chat behind a pseudonym. Reveal your identity only when you're comfortable." },
-                { icon: "🔒", title: "Privacy Built In", desc: "Messages auto-delete after 24h. Your real name stays hidden until you choose." },
+                { icon: "📍", title: "Hyper-Local", desc: "100-mile radius matching from your pincode" },
+                { icon: "🎭", title: "Anonymous", desc: "Chat with a pseudonym, reveal when ready" },
+                { icon: "🔒", title: "Private", desc: "Messages auto-delete after 24 hours" },
               ].map((f, i) => (
-                <div key={i} className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/50 rounded-2xl p-6 text-center hover:border-cyan-500/30 transition-all duration-300">
-                  <span className="text-3xl mb-3 block">{f.icon}</span>
-                  <h3 className="text-sm font-bold text-white mb-1">{f.title}</h3>
-                  <p className="text-slate-400 text-xs leading-relaxed">{f.desc}</p>
+                <div key={i} className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/50 rounded-xl sm:rounded-2xl p-3 sm:p-6 text-center hover:border-cyan-500/30 transition-all duration-300">
+                  <span className="text-xl sm:text-3xl mb-1 sm:mb-3 block">{f.icon}</span>
+                  <h3 className="text-xs sm:text-sm font-bold text-white mb-0.5 sm:mb-1">{f.title}</h3>
+                  <p className="text-slate-400 text-[10px] sm:text-xs leading-relaxed hidden sm:block">{f.desc}</p>
                 </div>
               ))}
             </div>
@@ -236,29 +252,36 @@ export default function HomePage() {
         </div>
       ) : (
         /* ═══ SEARCH RESULTS STATE ═══ */
-        <div className="p-6 sm:p-12 max-w-7xl mx-auto relative z-10">
-          <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-800 pb-8">
+        <div className="p-4 sm:p-6 lg:p-12 max-w-7xl mx-auto relative z-10">
+          <header className="mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 border-b border-slate-800 pb-6 sm:pb-8">
             <div>
-              <h1 className="text-3xl font-extrabold text-white mb-2 cursor-pointer hover:text-cyan-400 transition-colors" onClick={() => setHasSearched(false)}>
-                &larr; New Search
-              </h1>
-              <p className="text-xl text-slate-400">
+              <button className="text-xl sm:text-3xl font-extrabold text-white mb-2 hover:text-cyan-400 transition-colors flex items-center gap-2" onClick={() => setHasSearched(false)}>
+                ← <span className="text-lg sm:text-3xl">New Search</span>
+              </button>
+              <p className="text-base sm:text-xl text-slate-400">
                 People at <strong className="text-white">{currentCitySearch}</strong>
               </p>
             </div>
-            <div className="flex gap-4 items-center">
-               <button onClick={() => setHasSearched(false)} className="text-sm font-bold text-cyan-400 hover:text-cyan-300 bg-cyan-900/20 px-4 py-2 rounded-lg border border-cyan-900/50">
-                 Change Location
-               </button>
+            <div className="flex gap-3 items-center">
+              <button onClick={() => setHasSearched(false)} className="text-sm font-bold text-cyan-400 hover:text-cyan-300 bg-cyan-900/20 px-4 py-2 rounded-lg border border-cyan-900/50">
+                Change Location
+              </button>
+              {/* Mobile filter toggle */}
+              <button 
+                onClick={() => setShowFilters(!showFilters)} 
+                className="lg:hidden text-sm font-bold text-slate-300 bg-slate-800 px-4 py-2 rounded-lg border border-slate-700"
+              >
+                {showFilters ? 'Hide Filters' : 'Filters'}
+              </button>
             </div>
           </header>
 
-          <div className="flex flex-col lg:flex-row gap-10">
-            {/* Sidebar Filters */}
-            <aside className="w-full lg:w-72 flex-shrink-0">
-              <div className="bg-slate-900 p-6 rounded-2xl shadow-lg border border-slate-800 sticky top-24">
-                <h3 className="text-lg font-bold text-white mb-6">Filter Results</h3>
-                <div className="space-y-6">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+            {/* Sidebar Filters — collapsible on mobile */}
+            <aside className={`w-full lg:w-72 flex-shrink-0 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+              <div className="bg-slate-900 p-5 sm:p-6 rounded-2xl shadow-lg border border-slate-800 lg:sticky lg:top-24">
+                <h3 className="text-base sm:text-lg font-bold text-white mb-4 sm:mb-6">Filter Results</h3>
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Hometown / Pincode</label>
                     <input value={homeCityFilter} onChange={(e) => setHomeCityFilter(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white placeholder-slate-500 text-sm" placeholder="Where are they from?" />
@@ -277,7 +300,7 @@ export default function HomePage() {
                       <option value="Other">Other</option>
                     </select>
                   </div>
-                  <button onClick={() => { setHomeCityFilter(''); setGenderFilter(''); setLanguageFilter(''); }} className="w-full mt-4 text-xs font-bold text-slate-400 hover:text-white py-2">Clear Filters</button>
+                  <button onClick={() => { setHomeCityFilter(''); setGenderFilter(''); setLanguageFilter(''); }} className="w-full mt-2 text-xs font-bold text-slate-400 hover:text-white py-2">Clear Filters</button>
                 </div>
               </div>
             </aside>
@@ -285,42 +308,42 @@ export default function HomePage() {
             {/* Results Grid */}
             <main className="flex-1">
               {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                   {[1, 2, 3, 4, 5, 6].map(i => (
                     <div key={i} className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800/50 animate-pulse h-48"></div>
                   ))}
                 </div>
               ) : users.length === 0 ? (
-                <div className="text-center py-20 px-6 bg-slate-900/80 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden">
+                <div className="text-center py-12 sm:py-20 px-4 sm:px-6 bg-slate-900/80 rounded-2xl sm:rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-emerald-900/20 pointer-events-none"></div>
                   <div className="relative z-10">
-                    <div className="text-6xl mb-6 animate-pulse">🌱</div>
-                    <h3 className="text-3xl font-extrabold mb-4 text-white tracking-tight">You're the first one here!</h3>
-                    <p className="text-lg text-slate-300 mb-8 max-w-lg mx-auto leading-relaxed">
-                      No one in your network has moved to <strong className="text-white">{currentCitySearch}</strong> yet. 
+                    <div className="text-5xl sm:text-6xl mb-4 sm:mb-6 animate-pulse">🌱</div>
+                    <h3 className="text-2xl sm:text-3xl font-extrabold mb-3 sm:mb-4 text-white tracking-tight">You're the first one here!</h3>
+                    <p className="text-base sm:text-lg text-slate-300 mb-6 sm:mb-8 max-w-lg mx-auto leading-relaxed">
+                      No one from your network has moved to <strong className="text-white">{currentCitySearch}</strong> yet. 
                       Register to plant your flag!
                     </p>
                     {!sessionUser ? (
-                      <button onClick={() => setShowAuthModal(true)} className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 px-10 rounded-2xl transition-all shadow-lg hover:shadow-cyan-500/25 hover:-translate-y-1">
+                      <button onClick={() => setShowAuthModal(true)} className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 sm:py-4 px-8 sm:px-10 rounded-xl sm:rounded-2xl transition-all shadow-lg hover:shadow-cyan-500/25 text-base">
                         Sign Up & Be the First
                       </button>
                     ) : (
-                      <p className="text-cyan-400 font-bold bg-cyan-900/20 p-4 rounded-xl inline-block border border-cyan-800/50">
+                      <p className="text-cyan-400 font-bold bg-cyan-900/20 p-4 rounded-xl inline-block border border-cyan-800/50 text-sm sm:text-base">
                         You're on the list! We'll notify you when someone joins.
                       </p>
                     )}
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                   {users.map(user => (
-                    <div key={user.id} className="group bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-800 hover:border-slate-700 transition-all hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between">
+                    <div key={user.id} className="group bg-slate-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-800 hover:border-slate-700 transition-all hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between">
                       <div>
-                        <div className="flex justify-between items-start mb-4">
-                          <h2 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">{user.pseudonym}</h2>
+                        <div className="flex justify-between items-start mb-3 sm:mb-4">
+                          <h2 className="text-base sm:text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">{user.pseudonym}</h2>
                           <span className="text-xs font-bold px-2 py-1 rounded-full bg-slate-800 text-slate-300">{user.status}</span>
                         </div>
-                        <div className="space-y-2 mb-6">
+                        <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
                           <div className="flex items-center text-sm text-slate-400">
                             <span className="mr-2">🏠</span> From <strong className="text-slate-200 ml-1">{user.home_city}</strong> {user.home_pincode && `(${user.home_pincode})`}
                           </div>
