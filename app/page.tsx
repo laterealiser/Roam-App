@@ -24,7 +24,7 @@ function Globe() {
     canvasRef.current.style.height = `${size}px`
     
     // Marker locations — major world cities
-    const markers = [
+    const markers: { location: [number, number], size: number }[] = [
       { location: [37.7595, -122.4367], size: 0.06 },  // San Francisco
       { location: [40.7128, -74.0060], size: 0.07 },   // New York
       { location: [51.5072, -0.1276], size: 0.07 },    // London
