@@ -65,12 +65,7 @@ function Globe() {
         state.phi = phiRef.current
         phiRef.current += 0.003
         frameCount++
-        
-        // Animate marker sizes to create a pulsing network effect
-        state.markers = markers.map((m, i) => ({
-          ...m,
-          size: m.size + Math.sin(frameCount * 0.03 + i * 1.5) * 0.02
-        }))
+
       },
     })
   }, [])
@@ -87,9 +82,6 @@ function Globe() {
 
   return (
     <div ref={containerRef} className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-      {/* Pulse rings behind the globe */}
-      <div className="absolute w-[320px] h-[320px] sm:w-[450px] sm:h-[450px] md:w-[550px] md:h-[550px] rounded-full border border-cyan-500/10 animate-ping" style={{ animationDuration: '4s' }} />
-      <div className="absolute w-[350px] h-[350px] sm:w-[480px] sm:h-[480px] md:w-[580px] md:h-[580px] rounded-full border border-blue-500/5 animate-ping" style={{ animationDuration: '6s' }} />
       <canvas ref={canvasRef} className="opacity-80" />
     </div>
   )
@@ -210,10 +202,10 @@ export default function HomePage() {
 
       {/* ═══ LANDING STATE ═══ */}
       {!hasSearched ? (
-        <div className="relative min-h-[calc(100vh-5rem)] flex flex-col">
+        <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between">
 
           {/* HERO */}
-          <section className="relative flex-1 flex flex-col items-center justify-center px-4 sm:px-6">
+          <section className="relative flex-1 flex flex-col items-center justify-center sm:justify-center pt-10 sm:pt-0 px-4 sm:px-6">
             <Globe />
             <div className="absolute top-[-10%] left-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-5%] w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -227,7 +219,7 @@ export default function HomePage() {
               <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-3 sm:mb-4 text-white leading-[1.1]">
                 Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">network</span>
               </h1>
-              <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-10 max-w-xl mx-auto px-2">
+              <p className="text-sm sm:text-base text-slate-400 mb-4 sm:mb-10 max-w-xl mx-auto px-2">
                 Moved to a new city? Search for your university, workplace, or area and discover people from your hometown living nearby.
               </p>
               
